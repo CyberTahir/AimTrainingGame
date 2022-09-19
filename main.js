@@ -67,8 +67,9 @@ class Board {
     }
 
     startGame() {
+        this.score = 0;
         this.setTime();
-        
+        this.timerDOM.parentNode.classList.remove('hide');
         this.ball.show();
         this.ball.transfer(this.element.getBoundingClientRect());
 
@@ -92,9 +93,29 @@ class Board {
         
         this.scoreDOM.textContent = `${this.score}`;
         this.header.classList.remove('hide');
+
+        setTimeout(() => {
+            screens[1].classList.remove('up');
+        }, 3000);
     }
 }
 
 const board = document.getElementById('board');
-let boardObj = new Board(board, timeDisplay, 1);
-boardObj.startGame();
+const timeList = document.getElementById('time-list');
+const screens = document.getElementsByClassName('screen');
+let boardObj = new Board(board, timeDisplay, 0);
+
+start.addEventListener('click', function(event) {
+    screens[0].classList.add('up');
+    event.preventDefault();
+});
+
+timeList.addEventListener('click', function(event) {
+    if(event.target.classList.contains('time-btn')) {
+        const time = parseInt(event.target.getAttribute('data-time'));
+        screens[1].classList.add('up');
+
+        boardObj.time = time;
+        boardObj.startGame();
+    }
+});
